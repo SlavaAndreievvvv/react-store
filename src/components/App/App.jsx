@@ -1,5 +1,6 @@
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { getCategories } from "../../features/categories/categoriesSlice";
+import { getProducts } from "../../features/products/productsSlice";
 
 import { Footer } from "../Footer";
 import { Header } from "../Header";
@@ -12,6 +13,7 @@ export const App = () => {
 
   useEffect(() => {
     dispatch(getCategories());
+    dispatch(getProducts());
   }, [dispatch]);
 
   return (
@@ -19,7 +21,7 @@ export const App = () => {
       <Header />
 
       <div className="container">
-        <Sidebar />
+        <Sidebar amount={5} />
         <AppRoutes />
       </div>
 
