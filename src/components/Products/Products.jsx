@@ -13,7 +13,7 @@ export const Products = ({ title, style = {}, products = [], amount }) => {
             <div
               className={styles.image}
               style={{ backgroundImage: `url(${images[0]})` }}
-            ></div>
+            />
 
             <div className={styles.wrapper}>
               <h2 className={styles.title}>{title}</h2>
