@@ -1,8 +1,8 @@
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-
 import { BASE_URL } from "../../utils/constants";
+import { shuffle } from "../../utils/common";
 
 export const getProducts = createAsyncThunk(
   "products/getProducts",
@@ -17,25 +17,29 @@ export const getProducts = createAsyncThunk(
   }
 );
 
-export const productsSlice = createSlice({
+const productsSlice = createSlice({
   name: "products",
   initialState: {
     list: [],
     filtered: [],
-    // related: [],
+    related: [],
+    isLoading: false,
   },
   reducers: {
-    filteredByPrice: (state, action) => {
-      state.filtered = state.list.filter(({ price }) => price < action.payload);
+    filteredByPrice: (state, { payload }) => {
+      state.filtered = state.list.filter(({ price }) => price < payload);
+    },
+    getRelatedProducts: (state, { payload }) => {
+      const list = state.list.filter(({ category: { id } }) => id === payload);
+      state.related = shuffle(list);
     },
   },
-  isLoading: false,
   extraReducers: (builder) => {
     builder.addCase(getProducts.pending, (state) => {
       state.isLoading = true;
     });
-    builder.addCase(getProducts.fulfilled, (state, action) => {
-      state.list = action.payload;
+    builder.addCase(getProducts.fulfilled, (state, { payload }) => {
+      state.list = payload;
       state.isLoading = false;
     });
     builder.addCase(getProducts.rejected, (state) => {
@@ -44,6 +48,6 @@ export const productsSlice = createSlice({
   },
 });
 
-export const { filteredByPrice } = productsSlice.actions;
+export const { filteredByPrice, getRelatedProducts } = productsSlice.actions;
 
 export default productsSlice.reducer;
